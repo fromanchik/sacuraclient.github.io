@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sakura Client • 桜クライアント • Neon Waifu Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=Zen+Maru+Gothic:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(135deg, #0a001f, #2a0033, #1a0022);
+      color: #ffe6ff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(90deg, rgba(0,255,255,0.03) 0px, transparent 2px, transparent 40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .sakura { position: fixed; top: -10vh; width: 100%; height: 110vh; pointer-events: none; z-index: 1; }
+    .petal {
+      position: absolute;
+      width: 14px; height: 22px;
+      background: radial-gradient(circle at 30% 30%, #ff99ee, #ff44aa);
+      border-radius: 50% 0 50% 50%;
+      box-shadow: 0 0 15px #ff44aa;
+      opacity: 0.85;
+      animation: fall linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(1080deg); }
+    }
+    header {
+      text-align: center;
+      padding: 140px 20px 60px;
+      position: relative;
+      z-index: 2;
+    }
+    .neon-title {
+      font-size: 5.2rem;
+      font-weight: 700;
+      letter-spacing: 8px;
+      background: linear-gradient(90deg, #ff66cc, #00ffff, #cc66ff, #ff66cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px #ff00aa, 0 0 80px #00ffff;
+      margin-bottom: 10px;
+    }
+    .kanji {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 3.8rem;
+      color: #ffccff;
+      text-shadow: 0 0 30px #ff66ff;
+      margin: -20px 0 10px;
+      animation: glow 3s infinite alternate;
+    }
+    @keyframes glow { from { text-shadow: 0 0 20px #ff66ff; } to { text-shadow: 0 0 60px #00ffff; } }
+    .creator {
+      font-size: 1.4rem;
+      color: #aaffff;
+      margin-bottom: 10px;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 15px #00ffff;
+    }
+    .subtitle {
+      font-size: 1.65rem;
+      color: #ffddff;
+      margin-bottom: 20px;
+      letter-spacing: 3px;
+    }
+    .tokyo {
+      font-size: 1.8rem;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc;
+      margin: 15px 0;
+    }
+    .version {
+      font-size: 1.35rem;
+      background: rgba(255,255,255,0.08);
+      padding: 10px 30px;
+      border-radius: 50px;
+      border: 2px solid #00ffff;
+      display: inline-block;
+      box-shadow: 0 0 25px #00ffff;
+    }
+    .download-section {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 620px;
+      position: relative;
+      z-index: 2;
+    }
+    .btn-download {
+      display: inline-block;
+      padding: 22px 70px;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(45deg, #ff44aa, #00ccff, #ff44aa);
+      background-size: 300% 300%;
+      border: none;
+      border-radius: 60px;
+      text-decoration: none;
+      box-shadow: 0 15px 50px rgba(255, 68, 170, 0.6);
+      transition: 0.5s;
+      animation: pulse 2.5s infinite;
+    }
+    .btn-download:hover {
+      transform: scale(1.12) translateY(-8px);
+      box-shadow: 0 25px 70px rgba(0, 255, 255, 0.7);
+    }
+    .btn-jp {
+      font-size: 1.1rem;
+      margin-top: 8px;
+      display: block;
+      color: #aaffff;
+    }
+    .gallery {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    .gallery img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(255, 68, 170, 0.4);
+      transition: transform 0.4s, box-shadow 0.4s;
+      border: 2px solid rgba(255, 102, 204, 0.3);
+    }
+    .gallery img:hover {
+      transform: scale(1.08);
+      box-shadow: 0 20px 50px rgba(0, 255, 255, 0.6);
+    }
+    .gallery h2 {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 2.5rem;
+      color: #ff99ee;
+      text-shadow: 0 0 20px #ff66ff;
+      margin-bottom: 30px;
+    }
+    .warning {
+      margin: 50px auto;
+      max-width: 720px;
+      background: rgba(255, 60, 120, 0.18);
+      border: 2px solid #ff44aa;
+      padding: 25px;
+      border-radius: 20px;
+      font-size: 1.15rem;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 68, 170, 0.4);
+      z-index: 2;
+      position: relative;
+    }
+    footer {
+      text-align: center;
+      padding: 80px 20px 40px;
+      color: #88ffdd;
+      font-size: 1.05rem;
+      z-index: 2;
+      position: relative;
+    }
+    .made-by {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      font-size: 1.3rem;
+      color: #ff99ee;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sakura" id="sakura-container"></div>
+
+  <header>
+    <div class="creator">fromanchik presents</div>
+    <div class="neon-title">Sakura Client</div>
+    <div class="kanji">桜クライアント</div>
+    <div class="tokyo">東京ネオン waifu エディション 🗼💖</div>
+    <div class="subtitle">Аниме-чит • Неоновые девочки • 1.16.5</div>
+    <div class="version">バージョン 1.16.5 • MINECRAFT</div>
+  </header>
+
+  <section class="download-section">
+    <a href="https://workupload.com/file/hExZGWqZ9Hm" class="btn-download" download>
+      Скачать сейчас
+      <div class="btn-jp">ダウンロードする</div>
+    </a>
+  </section>
+
+  <section class="gallery">
+    <h2>桜 waifu gallery 🌸✨</h2>
+    <img src="https://images.stockcake.com/public/e/f/2/ef21adf2-cf2d-4447-b788-30422432bdbf/iridescent-city-girl-stockcake.jpg" alt="Neon pink hair anime girl sakura">
+    <img src="https://w0.peakpx.com/wallpaper/465/229/HD-wallpaper-girl-with-umbrella-anime-sakura-girl-umbrella-pink-blooms-cherry.jpg" alt="Anime girl umbrella cherry blossoms">
+    <img src="https://images.stockcake.com/public/a/5/6/a565c258-b343-4ae1-b946-8da23cea4cd6/cherry-blossom-girl-stockcake.jpg" alt="Neon schoolgirl sakura Tokyo">
+    <img src="https://wallpapers-clan.com/wp-content/uploads/2025/07/rem-rezero-cherry-blossom-romantic-pose-desktop-wallpaper-preview.jpg" alt="Rem Re:Zero sakura romantic">
+    <img src="https://images8.alphacoders.com/137/thumb-1920-1377793.png" alt="Pink hair intense anime girl sakura">
+    <img src="https://images.stockcake.com/public/0/1/2/01237940-b93b-42cb-be2f-c7e261653d36/neon-cherry-dreams-stockcake.jpg" alt="Kimono anime girl neon Tokyo sakura">
+    <img src="https://w0.peakpx.com/wallpaper/110/989/HD-wallpaper-sakura-miku-nishina-hima-lantern-anime-flower-manga-night.jpg" alt="Sakura Miku night lanterns">
+    <img src="https://wallpapers.com/images/hd/1920x1080-anime-sakura-miku-pink-5rv8593ti5xvz260.jpg" alt="Sakura Miku pink ponytail">
+  </section>
+
+  <div class="warning">
+    ⚠️ Это чит-клиент. Только анархия / свои сервера.<br>
+    Hypixel, 2b2t и прочие — бан 100%.<br>
+    <strong>fromanchik не отвечает за ваши баны</strong> 🌸😈
+  </div>
+
+  <footer>
+    © 2026 Sakura Ghost Project<br>
+    <div class="made-by">
+      Сделано с waifu-любовью by <strong>fromanchik</strong> 🗼🌸💕
+    </div>
+  </footer>
+
+  <script>
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.animationDuration = (Math.random() * 7 + 9) + 's';
+      petal.style.opacity = Math.random() * 0.5 + 0.6;
+      petal.style.width = Math.random() * 9 + 11 + 'px';
+      petal.style.height = Math.random() * 14 + 20 + 'px';
+      petal.style.background = Math.random() > 0.5 
+        ? 'radial-gradient(circle, #ff99ee, #ff33bb)' 
+        : 'radial-gradient(circle, #aaffff, #66ccff)';
+      document.getElementById('sakura-container').appendChild(petal);
+      setTimeout(() => petal.remove(), 18000);
+    }
+
+    setInterval(createPetal, 280);
+    for(let i = 0; i < 20; i++) createPetal(); // больше лепестков для ваifu-атмосферы
+  </script>
+
+</body>
+</html>
