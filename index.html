@@ -1,207 +1,510 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sakura Client 1.16.5 — Байпас Matrix + Spider</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sakura Client — летний пляжный Minecraft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap');
-    
-    body { font-family: 'Inter', sans-serif; overflow-x: hidden; background: #fff0f5; color: #4a2c2c; }
-    .sakura-font { font-family: 'Playfair Display', cursive; }
-    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #f0f4ff;
+      line-height: 1.5;
+      overflow-x: hidden;
+      background: #0a1622;
+    }
+
+    /* ----- ФОН С ВАШИМ ИЗОБРАЖЕНИЕМ ----- */
+    .anime-beach-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      background: url('https://i.ibb.co/CKnp3gFQ/2ad903e4726d705e9e80272bd5e935bc.jpg') no-repeat center center;
+      background-size: cover;
+      image-rendering: auto;
+    }
+
+    /* Затемнение для читаемости текста */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(5,12,24,0.55) 0%, rgba(10,20,40,0.45) 50%, rgba(5,12,24,0.6) 100%);
+      backdrop-filter: blur(1.5px);
+      z-index: -2;
+    }
+
+    /* Падающие лепестки сакуры */
+    .sakura-petals {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
     .petal {
-      position: fixed; top: -50px; font-size: 24px; opacity: 0.7;
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #ffb7c5;
+      border-radius: 50% 0 50% 0;
+      transform: rotate(45deg);
+      opacity: 0.6;
       animation: fall linear infinite;
-      z-index: 1; pointer-events: none;
-      text-shadow: 0 0 10px #ff69b4;
+      box-shadow: 0 0 5px #ff9eb5;
     }
+
     @keyframes fall {
-      to { transform: translateY(110vh) rotate(720deg); }
+      0% { transform: translateY(-8vh) rotate(0deg) scale(0.7); opacity: 0.85; }
+      100% { transform: translateY(105vh) rotate(360deg) scale(0.2); opacity: 0; }
     }
-    
-    .hero-bg {
-      background: linear-gradient(135deg, #ffe4e1, #ffc1cc, #ff69b4);
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 24px;
       position: relative;
+      z-index: 2;
     }
-    .card {
-      transition: all 0.4s ease;
-      background: linear-gradient(to bottom right, #fff5f7, #ffffff);
+
+    /* Навигация */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      backdrop-filter: blur(18px);
+      background: rgba(5, 15, 30, 0.6);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 15px;
     }
-    .card:hover {
-      transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 20px 40px rgba(255, 105, 180, 0.35);
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.9rem;
+      background: linear-gradient(135deg, #ffd966, #f0a0b0, #ffd966);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .glow-pink { text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      color: #cbd5e6;
+      text-decoration: none;
+      transition: 0.25s;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #ffd966;
+    }
+
+    .btn {
+      border: none;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-download {
+      background: linear-gradient(145deg, #1e90ff, #0077b6);
+      color: white;
+      box-shadow: 0 6px 16px rgba(30,144,255,0.4);
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(145deg, #3a9eff, #0088cc);
+      transform: translateY(-2px);
+    }
+
+    .btn-tiligrim {
+      background: #5865F2;
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-tiligrim:hover {
+      background: #4752c4;
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin: 55px 0 90px;
+      gap: 40px;
+    }
+
+    .hero-text {
+      flex: 1 1 500px;
+    }
+
+    .hero-title {
+      font-size: 3.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 18px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .gradient-sakura {
+      background: linear-gradient(to right, #ffb7c5, #ffd966, #87cefa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .bubble-question {
+      background: rgba(255, 215, 0, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 200, 70, 0.5);
+      padding: 16px 22px;
+      border-radius: 28px;
+      margin-top: 20px;
+      display: inline-block;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      color: #ffecaa;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #ffaa33;
+      line-height: 1.6;
+    }
+
+    .server-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin: 28px 0;
+    }
+
+    .badge {
+      background: rgba(255,215,0,0.08);
+      border: 1px solid rgba(255,215,0,0.35);
+      padding: 8px 20px;
+      border-radius: 30px;
+      color: #ffd966;
+      backdrop-filter: blur(5px);
+    }
+
+    .sakura-card {
+      background: rgba(14, 25, 45, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 32px;
+      padding: 30px;
+      border: 1px solid rgba(255,215,0,0.3);
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Серверы */
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+
+    .servers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin: 30px 0 70px;
+    }
+
+    .server-card {
+      background: rgba(10, 20, 38, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 28px 22px;
+      border: 1px solid rgba(135,206,235,0.3);
+      transition: 0.3s;
+    }
+
+    .server-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,215,0,0.7);
+      box-shadow: 0 18px 30px rgba(30,144,255,0.3);
+    }
+
+    .server-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .server-name {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .bypass-tag {
+      background: linear-gradient(90deg, #1e90ff, #0077b6);
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 12px 0;
+      font-size: 0.85rem;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-top: 14px;
+    }
+
+    .features-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d0d8ea;
+      font-size: 0.95rem;
+    }
+
+    .features-list i {
+      color: #ffb7c5;
+    }
+
+    .download-section {
+      background: rgba(10,18,32,0.7);
+      backdrop-filter: blur(14px);
+      border-radius: 36px;
+      padding: 55px 35px;
+      text-align: center;
+      border: 1px solid rgba(255,215,0,0.35);
+      margin-bottom: 70px;
+    }
+
+    .big-download-btn {
+      background: linear-gradient(135deg, #ffd966, #f0a050);
+      padding: 18px 48px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border-radius: 50px;
+      color: #0b1a2f;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 10px 25px rgba(255,200,50,0.4);
+    }
+
+    .big-download-btn:hover {
+      transform: scale(1.04);
+      box-shadow: 0 15px 35px rgba(255,200,50,0.7);
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255,215,0,0.2);
+      padding: 30px 0;
+      display: flex;
+      justify-content: space-between;
+      color: #9aa4b8;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.2rem;
+      }
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Падающие лепестки -->
-  <div id="petals"></div>
+<!-- ФОН С ВАШИМ ИЗОБРАЖЕНИЕМ -->
+<div class="anime-beach-bg"></div>
+<div class="bg-overlay"></div>
 
-  <!-- NAV -->
-  <nav class="bg-white/80 backdrop-blur-md border-b border-pink-200 fixed w-full z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <span class="text-4xl">🌸</span>
-        <h1 class="sakura-font text-3xl font-bold tracking-widest text-pink-600">Sakura</h1>
-      </div>
-      <div class="flex gap-8 text-lg">
-        <a href="#" class="hover:text-pink-500 transition">Главная</a>
-        <a href="#features" class="hover:text-pink-500 transition">Функции</a>
-        <a href="#download" class="hover:text-pink-500 transition">Скачать</a>
-        <a href="#why-1165" class="hover:text-pink-500 transition">Почему 1.16.5?</a>
-      </div>
-      <a href="https://t.me/sakura_Minecraft" target="_blank"
-         class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
-        <i class="fab fa-telegram"></i> Telegram
+<!-- Лепестки сакуры -->
+<div class="sakura-petals" id="sakuraPetals"></div>
+
+<div class="container">
+  <nav class="navbar">
+    <div class="logo">🌸 Sakura Client</div>
+    <div class="nav-links">
+      <a href="#">Главная</a>
+      <a href="#">Визуалы</a>
+      <a href="#">Серверы</a>
+      <a href="#">KillAura</a>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="https://t.me/sakura_Minecraft" target="_blank" rel="noopener noreferrer" class="btn btn-tiligrim">
+        <i class="fab fa-discord"></i> тілігрім
       </a>
+      <button class="btn btn-download" onclick="document.getElementById('download').scrollIntoView({behavior:'smooth'})">
+        <i class="fas fa-download"></i> Скачать
+      </button>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative">
-    <div class="max-w-5xl mx-auto text-center px-6 relative z-10">
-      <p class="text-pink-700 text-2xl mb-4 tracking-widest">🌸 ONLY 1.16.5 • MATRIX BYPASS 2026</p>
-      <h1 class="sakura-font text-7xl md:text-9xl font-bold text-pink-800 glow-pink leading-tight mb-6">
-        SAKURA CLIENT
-      </h1>
-      <p class="text-4xl text-pink-700 mb-10">Spider • Climber • Fly • KillAura • Timer<br>Полный байпас Matrix на FunTime / RealWorld / Holly</p>
-      
-      <div class="flex flex-col sm:flex-row gap-8 justify-center mt-12">
-        <a href="#download" 
-           class="bg-white text-pink-600 hover:bg-pink-50 px-14 py-7 rounded-3xl text-3xl font-bold shadow-2xl flex items-center gap-5 transition">
-          <i class="fas fa-download text-4xl"></i> СКАЧАТЬ
-        </a>
-        <a href="https://t.me/sakura_Minecraft" target="_blank"
-           class="border-4 border-pink-500 text-pink-600 hover:bg-pink-500 hover:text-white px-14 py-7 rounded-3xl text-3xl font-bold transition flex items-center gap-5">
-          <i class="fab fa-telegram-plane text-4xl"></i> Telegram
-        </a>
+  <section class="hero">
+    <div class="hero-text">
+      <h1 class="hero-title">Твой пляжный чит <span class="gradient-sakura">Sakura</span></h1>
+      <p style="color:#b0c4de; font-size:1.15rem; max-width:500px;">KillAura, визуалы и обходы. Всё плавно, стильно, красиво.</p>
+      <div class="bubble-question">
+        💬 готов к лету с Сакурой?)
       </div>
-      
-      <div class="mt-16 text-pink-700 text-2xl font-semibold">
-        Только для Minecraft 1.16.5 • Последнее обновление: март 2026
+      <div class="server-badges">
+        <span class="badge">SpookyTime</span>
+        <span class="badge">Holly World</span>
+        <span class="badge">Sunway</span>
       </div>
+      <a href="#download" class="big-download-btn">🌸 провести лето
+ с сакурой</a>
     </div>
-    
-    <div class="absolute bottom-8 right-8 text-[220px] opacity-15 rotate-6">🌸</div>
-    <div class="absolute top-16 left-12 text-[180px] opacity-10 -rotate-12">🌺</div>
-  </section>
-
-  <!-- WHY 1.16.5 -->
-  <section id="why-1165" class="py-20 bg-white">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="sakura-font text-6xl text-pink-700 mb-10">Почему именно 1.16.5?</h2>
-      <div class="grid md:grid-cols-3 gap-10 text-left">
-        <div class="p-8 rounded-3xl bg-pink-50 border border-pink-200">
-          <h3 class="text-3xl font-bold text-pink-600 mb-4">Самые стабильные байпасы</h3>
-          <p class="text-lg text-pink-700">Matrix на 1.16.5 обновляется реже → Spider/Climber/Fly живут дольше без флагов.</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-pink-50 border border-pink-200">
-          <h3 class="text-3xl font-bold text-pink-600 mb-4">Популярные анархии</h3>
-          <p class="text-lg text-pink-700">FunTime, RealWorld, HollyWorld, Anarchy — почти все до сих пор на 1.16.5.</p>
-        </div>
-        <div class="p-8 rounded-3xl bg-pink-50 border border-pink-200">
-          <h3 class="text-3xl font-bold text-pink-600 mb-4">Лучшая оптимизация</h3>
-          <p class="text-lg text-pink-700">Меньше лагов, выше FPS даже с 50+ модулями.</p>
-        </div>
+    <div class="sakura-card">
+      <i class="fas fa-crown" style="font-size:3rem; color:#ffd966;"></i>
+      <h3>Sakura</h3>
+      <p style="color:#ffd966;"> release </p>
+      <div style="margin-top:10px; font-size:0.85rem; color:#b0c4de;">
+        <i class="fas fa-check-circle"></i> Minecraft 1.16.5
       </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section id="features" class="py-24 bg-gradient-to-b from-pink-50 to-white">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="sakura-font text-6xl text-center text-pink-700 mb-16">Мощные функции 1.16.5</h2>
-      
-      <div class="grid md:grid-cols-3 gap-10">
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">🕸️</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">Spider Matrix</h3>
-          <p class="text-xl text-pink-700">Стабильный подъём по стенам 0.42 blk/tick. Байпасит Spider A/B/C + Phase без setback'ов.</p>
-        </div>
-        
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">🪜</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">Climber / AirClimb</h3>
-          <p class="text-xl text-pink-700">Новые режимы подъёма (как в Nursultan Alpha). Работает в ловушках и на базах.</p>
-        </div>
-        
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">✈️</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">Fly + ElytraBoost</h3>
-          <p class="text-xl text-pink-700">Плавный Fly с Timer 1.02–1.04x. Elytra без флага на анархиях.</p>
-        </div>
-        
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">⚔️</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">KillAura 4.2 + Reach</h3>
-          <p class="text-xl text-pink-700">Reach 4.1–4.3 + AutoBlock. Байпасит Combat checks Matrix.</p>
-        </div>
-        
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">⏱️</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">Timer + Speed</h3>
-          <p class="text-xl text-pink-700">Timer Bypass 1.08 без флага Speed C. Идеально для погони/убега.</p>
-        </div>
-        
-        <div class="card p-10 rounded-3xl border border-pink-200">
-          <div class="text-7xl mb-6">🌟</div>
-          <h3 class="text-4xl font-bold text-pink-600 mb-4">+30 модулей</h3>
-          <p class="text-xl text-pink-700">XRay, FullBright, AutoTotem, Jesus, Scaffold, InventoryMove и многое другое.</p>
-        </div>
+  <div>
+    <div class="section-title"><i class="fas fa-umbrella-beach"></i> Серверы и обходы</div>
+    <div class="servers-grid">
+      <div class="server-card">
+        <div class="server-icon">👻</div>
+        <div class="server-name">SpookyTime</div>
+        <span class="bypass-tag">✔ KillAura · Визуалы</span>
+        <ul class="features-list">
+          <li><i class="fas fa-crosshairs"></i> KillAura (AAC/Grim)</li>
+          <li><i class="fas fa-eye"></i> Player ESP, Chest ESP</li>
+          <li><i class="fas fa-ruler"></i> крута короче</li>
+          <li><i class="fas fa-feather-alt"></i> Velocity 0%</li>
+        </ul>
+      </div>
+      <div class="server-card">
+        <div class="server-icon">🍒</div>
+        <div class="server-name">Holly World</div>
+        <span class="bypass-tag">✔ Визуалы премиум</span>
+        <ul class="features-list">
+          <li><i class="fas fa-bolt"></i> KillAura (Matrix)</li>
+          <li><i class="fas fa-paint-brush"></i> Chams, FullBright</li>
+          <li><i class="fas fa-box-open"></i> ChestStealer</li>
+          <li><i class="fas fa-shield"></i> NoSlow, AutoArmor</li>
+        </ul>
+      </div>
+      <div class="server-card">
+        <div class="server-icon">☀️</div>
+        <div class="server-name">Sunway</div>
+        <span class="bypass-tag">✔ Лучшие визуалы</span>
+        <ul class="features-list">
+          <li><i class="fas fa-bullseye"></i> KillAura (Polar/Karhu)</li>
+          <li><i class="fas fa-gem"></i> killaura,visuals</li>
+          <li><i class="fas fa-user-ninja"></i> Player Visuals</li>
+          <li><i class="fas fa-cogs"></i> обходы</li>
+        </ul>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- DOWNLOAD -->
-  <section id="download" class="py-24 bg-gradient-to-b from-pink-100 to-[#fff0f5]">
-    <div class="max-w-4xl mx-auto text-center px-6">
-      <h2 class="sakura-font text-6xl text-pink-800 mb-8">Скачать Sakura 1.16.5</h2>
-      <p class="text-3xl text-pink-600 mb-12">Версия 1.3.8 • Обновлено 15 марта 2026</p>
+  <div class="download-section" id="download">
+    <i class="fas fa-download" style="font-size:2.8rem; color:#ffd966;"></i>
+    <h2>Готов к летнему вайбу?</h2>
+    <p style="color:#ccd6e8; margin-top:8px;">Sakura Client  · Бесплатно · круто</p>
+    <a href="https://go.linkify.ru/2IVM" target="_blank" rel="noopener noreferrer" class="big-download-btn" style="margin-top:20px;">
+      <i class="fas fa-file-archive"></i> провести лето с сакурой🌸
+    </a>
+    <p style="color:#9aa4b8; margin-top:14px; font-size:0.9rem;">
+      <i class="fas fa-shield-alt"></i> Файл проверен · Вирусов много
+    </p>
+  </div>
 
-      <a href="https://go.linkify.ru/2Gvv"
-         class="inline-block bg-pink-600 hover:bg-pink-700 text-white px-16 py-10 rounded-3xl text-4xl font-bold shadow-2xl transition flex items-center gap-8 mx-auto"
-         target="_blank" download>
-        <i class="fas fa-cloud-download-alt text-6xl"></i>
-        СКАЧАТЬ SAKURA
-      </a>
-      
-      <div class="mt-12 text-pink-700 text-2xl">
-        Промокод на Premium: <span class="font-bold text-pink-600">SAKURA</span> — 0% скидка!!
-      </div>
-      <div class="mt-6 text-pink-600 text-xl">
-      </div>
-    </div>
-  </section>
+  <div class="footer">
+    <span>© 1488 Sakura Client · Лето,пляж,сакура🌸</span>
+    <span style="display: flex; gap: 18px;">
+      <i class="fab fa-discord"></i> Discord
+      <i class="fab fa-telegram"></i> Telegram
+      <i class="fab fa-github"></i> GitHub
+    </span>
+  </div>
+</div>
 
-  <!-- FOOTER -->
-  <footer class="bg-pink-800 text-pink-100 py-12">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-      <p class="text-3xl sakura-font mb-4">🌸 Sakura Client • Только 1.16.5</p>
-      <p>Для тестов и обучения. Используй на свой страх и риск. Не для продажи.</p>
-      <p class="mt-4">© 2026 Sakura Team</p>
-    </div>
-  </footer>
-
-  <script>
-    // Лепестки сакуры
-    function createPetal() {
+<script>
+  (function() {
+    const container = document.getElementById('sakuraPetals');
+    for (let i = 0; i < 50; i++) {
       const petal = document.createElement('div');
       petal.className = 'petal';
-      petal.textContent = ['🌸','🌺','✿','❀','🌷'][Math.floor(Math.random()*5)];
-      petal.style.left = Math.random() * 100 + 'vw';
-      petal.style.animationDuration = (Math.random() * 10 + 12) + 's';
-      petal.style.fontSize = (Math.random() * 24 + 20) + 'px';
-      document.getElementById('petals').appendChild(petal);
-      setTimeout(() => petal.remove(), 25000);
+      const size = Math.random() * 10 + 6;
+      petal.style.width = size + 'px';
+      petal.style.height = size + 'px';
+      petal.style.left = Math.random() * 100 + '%';
+      petal.style.animationDuration = (7 + Math.random() * 12) + 's';
+      petal.style.animationDelay = Math.random() * 8 + 's';
+      container.appendChild(petal);
     }
-    
-    setInterval(createPetal, 150);
-    for(let i = 0; i < 20; i++) createPetal();
-  </script>
+
+    // Плавное появление карточек при скролле
+    const cards = document.querySelectorAll('.server-card, .sakura-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.2 });
+
+    cards.forEach(card => {
+      card.style.opacity = 0;
+      card.style.transform = 'translateY(25px)';
+      card.style.transition = 'all 0.6s ease';
+      observer.observe(card);
+    });
+  })();
+</script>
 </body>
 </html>
